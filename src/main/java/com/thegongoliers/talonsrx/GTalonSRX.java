@@ -1,5 +1,6 @@
 package com.thegongoliers.talonsrx;
 
+import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -278,6 +279,20 @@ public class GTalonSRX implements SpeedController {
         talon.enableCurrentLimit(false);
     }
 
-    // TODO: motion profiling
+    /**
+     * Start following a motion profile.
+     * @param pointStream The motion profile to follow.
+     */
+    public void startMotionProflile(BufferedTrajectoryPointStream pointStream){
+        talon.startMotionProfile(pointStream, 10, ControlMode.MotionProfile);
+    }
+
+    /**
+     * Determines if the motion profile is finished.
+     * @return True if the motion profile is finished.
+     */
+    public boolean isMotionProfileFinished(){
+        return talon.isMotionProfileFinished();
+    }
 
 }
