@@ -24,7 +24,7 @@ public class TrajectoryCreator {
             double position = profile[i][0];
             double velocity = profile[i][1];
 //            double acceleration = profile[i][2];
-            int duration = (int) profile[i][3];
+            int duration = (int) (profile[i][3] * 1000);
 
             point.timeDur = duration;
             point.position = position * positionToTicks;
