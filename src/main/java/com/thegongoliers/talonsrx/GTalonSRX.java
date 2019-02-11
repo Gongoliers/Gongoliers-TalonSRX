@@ -3,9 +3,8 @@ package com.thegongoliers.talonsrx;
 import com.ctre.phoenix.motion.BufferedTrajectoryPointStream;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.SpeedController;
 
-public class GTalonSRX implements SpeedController {
+public class GTalonSRX implements ITalonSRX {
 
     private WPI_TalonSRX talon;
 
@@ -43,6 +42,7 @@ public class GTalonSRX implements SpeedController {
      * Set the selected sensor of the talon.
      * @param feedbackDevice The type of the sensor.
      */
+    @Override
     public void setSensor(FeedbackDevice feedbackDevice){
         talon.configSelectedFeedbackSensor(feedbackDevice, 0, 30);
     }
@@ -51,6 +51,7 @@ public class GTalonSRX implements SpeedController {
      * Set the coefficient of the sensor (can be used for encoder position).
      * @param sensorCoefficient The coefficient of the sensor.
      */
+    @Override
     public void setSensorCoefficient(double sensorCoefficient){
         talon.configSelectedFeedbackCoefficient(sensorCoefficient);
     }
@@ -59,6 +60,7 @@ public class GTalonSRX implements SpeedController {
      * Set this talon's sensor to the sensor on another talon.
      * @param remoteTalonID The id of the talon which has the sensor to use selected.
      */
+    @Override
     public void setRemoteSensor(int remoteTalonID){
         talon.configRemoteFeedbackFilter(remoteTalonID, RemoteSensorSource.TalonSRX_SelectedSensor, 0);
         setSensor(FeedbackDevice.RemoteSensor0);
@@ -68,6 +70,7 @@ public class GTalonSRX implements SpeedController {
      * Set the neutral deadband (sets motor to 0 if below percent output).
      * @param percentOutput The percent output of the neutral deadband.
      */
+    @Override
     public void setNeutralDeadband(double percentOutput){
         talon.configNeutralDeadband(percentOutput);
     }
@@ -75,6 +78,7 @@ public class GTalonSRX implements SpeedController {
     /**
      * Use the brake mode when in neutral.
      */
+    @Override
     public void useBrakeMode(){
         talon.setNeutralMode(NeutralMode.Brake);
     }
@@ -82,6 +86,7 @@ public class GTalonSRX implements SpeedController {
     /**
      * Use the coast mode when in neutral.
      */
+    @Override
     public void useCoastMode(){
         talon.setNeutralMode(NeutralMode.Coast);
     }
@@ -90,14 +95,16 @@ public class GTalonSRX implements SpeedController {
      * Follow a talon SRX motor.
      * @param master The master talon to follow.
      */
-    public void follow(GTalonSRX master){
-        talon.follow(master.talon);
+    @Override
+    public void follow(ITalonSRX master){
+        talon.follow(master.getTalon());
 //        talon.set(ControlMode.Follower, master.talon.getDeviceID());
     }
 
     /**
      * Unfollow any other talon SRXs if currently following.
      */
+    @Override
     public void unfollow(){
         talon.set(ControlMode.PercentOutput, 0);
     }
@@ -110,6 +117,7 @@ public class GTalonSRX implements SpeedController {
      * @param kd The differential constant.
      * @param threshold The error threshold of the PID loop.
      */
+    @Override
     public void setPID(double kp, double ki, double kd, int threshold){
         setPIDF(kp, ki, kd, 0, threshold);
     }
@@ -122,6 +130,7 @@ public class GTalonSRX implements SpeedController {
      * @param kf The feed forward constant.
      * @param threshold The error threshold of the PIDF loop.
      */
+    @Override
     public void setPIDF(double kp, double ki, double kd, double kf, int threshold){
         talon.config_kP(0, kp);
         talon.config_kI(0, ki);
@@ -142,6 +151,7 @@ public class GTalonSRX implements SpeedController {
      * Sets the open loop ramp of a Talon SRX. This will limit the amount the power is allowed to change per tick.
      * @param secondsFromNeutralToFull The seconds it takes to go from neutral (no power) to full (full power).
      */
+    @Override
     public void setRamp(double secondsFromNeutralToFull){
         talon.configOpenloopRamp(secondsFromNeutralToFull);
     }
@@ -159,6 +169,7 @@ public class GTalonSRX implements SpeedController {
      * Sets the position of the motor.
      * @param position The position in encoder ticks.
      */
+    @Override
     public void setPosition(double position){
         set(ControlMode.Position, position);
     }
@@ -167,6 +178,7 @@ public class GTalonSRX implements SpeedController {
      * Sets the change in position over 100ms.
      * @param velocity The velocity (position change / 100ms).
      */
+    @Override
     public void setVelocity(double velocity){
         set(ControlMode.Velocity, velocity);
     }
@@ -175,6 +187,7 @@ public class GTalonSRX implements SpeedController {
      * Sets the current of the motor in amps.
      * @param current The current in amps.
      */
+    @Override
     public void setCurrent(double current){
         set(ControlMode.Current, current);
     }
@@ -192,6 +205,7 @@ public class GTalonSRX implements SpeedController {
      * Gets the output current of the motor.
      * @return The output current in amps.
      */
+    @Override
     public double getCurrent() {
         return talon.getOutputCurrent();
     }
@@ -200,6 +214,7 @@ public class GTalonSRX implements SpeedController {
      * Gets the output voltage of the motor.
      * @return The output voltage in volts.
      */
+    @Override
     public double getVoltage() {
         return talon.getMotorOutputVoltage();
     }
@@ -207,6 +222,7 @@ public class GTalonSRX implements SpeedController {
     /**
      * Reset the encoder position to 0.
      */
+    @Override
     public void resetEncoder(){
         talon.getSensorCollection().setQuadraturePosition(0, 30);
     }
@@ -215,6 +231,7 @@ public class GTalonSRX implements SpeedController {
      * Get the position of the motor.
      * @return The position in encoder ticks.
      */
+    @Override
     public double getPosition(){
         return talon.getSelectedSensorPosition(0);
     }
@@ -223,6 +240,7 @@ public class GTalonSRX implements SpeedController {
      * Get the velocity of the motor.
      * @return The velocity in encoder ticks / 100ms.
      */
+    @Override
     public double getVelocity(){
         return talon.getSelectedSensorVelocity(0);
     }
@@ -241,6 +259,7 @@ public class GTalonSRX implements SpeedController {
      * Set the sensor phase (if the sensor is inverted).
      * @param sensorPhase The sensor phase.
      */
+    @Override
     public void setSensorPhase(boolean sensorPhase){
         talon.setSensorPhase(sensorPhase);
     }
@@ -265,6 +284,7 @@ public class GTalonSRX implements SpeedController {
      * @param peakCurrentAmps The maximum current in amps.
      * @param maintainCurrentAmps The nominal current.
      */
+    @Override
     public void enableCurrentLimit(int peakCurrentAmps, int maintainCurrentAmps){
         talon.configPeakCurrentLimit(peakCurrentAmps);
         talon.configContinuousCurrentLimit(maintainCurrentAmps);
@@ -275,6 +295,7 @@ public class GTalonSRX implements SpeedController {
     /**
      * Disable current limiting.
      */
+    @Override
     public void disableCurrentLimit(){
         talon.enableCurrentLimit(false);
     }
@@ -283,7 +304,8 @@ public class GTalonSRX implements SpeedController {
      * Start following a motion profile.
      * @param pointStream The motion profile to follow.
      */
-    public void startMotionProflile(BufferedTrajectoryPointStream pointStream){
+    @Override
+    public void startMotionProfile(BufferedTrajectoryPointStream pointStream){
         talon.startMotionProfile(pointStream, 10, ControlMode.MotionProfile);
     }
 
@@ -291,6 +313,7 @@ public class GTalonSRX implements SpeedController {
      * Determines if the motion profile is finished.
      * @return True if the motion profile is finished.
      */
+    @Override
     public boolean isMotionProfileFinished(){
         return talon.isMotionProfileFinished();
     }
