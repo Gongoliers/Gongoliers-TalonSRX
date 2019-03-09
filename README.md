@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.github.Gongoliers:Gongoliers-TalonSRX:v1.2,0'
+    compile 'com.github.Gongoliers:Gongoliers-TalonSRX:v1.2.1'
 }
 ```
 
