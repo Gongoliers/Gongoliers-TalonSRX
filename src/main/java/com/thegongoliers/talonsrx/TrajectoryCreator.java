@@ -33,7 +33,7 @@ public class TrajectoryCreator {
             point.auxiliaryPos = 0;
             point.auxiliaryVel = 0;
             point.profileSlotSelect0 = 0;
-            point.profileSlotSelect1 = 1;
+            point.profileSlotSelect1 = 0;
             point.zeroPos = (i == 0);
             point.isLastPoint = (i == profile.length - 1);
             point.arbFeedFwd = 0;
